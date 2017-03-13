@@ -1,7 +1,6 @@
-package ecbstore
+package mock
 
 import (
-	"errors"
 	"reflect"
 	"testing"
 )
@@ -12,48 +11,30 @@ func TestGetExchangeRate(t *testing.T) {
 		To           string
 		Date         string
 		ExpectedErr  error
-		ExpectedRate string
+		ExpectedRate float64
 	}{
 		{
 			From:         "USD",
 			To:           "EUR",
 			Date:         "2017-03-02",
 			ExpectedErr:  nil,
-			ExpectedRate: "0.95111",
+			ExpectedRate: 1,
 		},
 		{
 			From:         "EUR",
 			To:           "USD",
 			Date:         "2017-03-02",
 			ExpectedErr:  nil,
-			ExpectedRate: "1.05140",
-		},
-		{
-			From:         "USD",
-			To:           "XYZ",
-			Date:         "2017-03-02",
-			ExpectedErr:  errors.New("currency XYZ not found"),
-			ExpectedRate: "",
-		},
-		{
-			From:         "XYZ",
-			To:           "USD",
-			Date:         "2017-03-02",
-			ExpectedErr:  errors.New("currency XYZ not found"),
-			ExpectedRate: "",
-		},
-		{
-			From:         "USD",
-			To:           "EUR",
-			Date:         "9999-03-02",
-			ExpectedErr:  errors.New("date not found"),
-			ExpectedRate: "",
+			ExpectedRate: 1,
 		},
 	}
 
-	e := &ECBStore{}
+	s := New()
+	s.OnGetExchangeRate = func(from, to string, date string) (float64, error) {
+		return 1.0, nil
+	}
 	for i, tt := range tests {
-		got, err := e.GetExchangeRate(tt.From, tt.To, tt.Date)
+		got, err := s.GetExchangeRate(tt.From, tt.To, tt.Date)
 		if want, got := tt.ExpectedErr, err; !reflect.DeepEqual(want, got) {
 			t.Fatalf("#%d failed: expected error=%v, got %v", i, want, got)
 		}
