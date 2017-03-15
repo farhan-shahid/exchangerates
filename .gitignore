@@ -1,3 +1,14 @@
 debug
 debug.test
 .vscode/*
+
+*.exe
+*.dll
+*.so
+*.dylib
+
+*.test
+
+*.out
+
+.glide/

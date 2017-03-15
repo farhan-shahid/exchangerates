@@ -57,7 +57,7 @@ func TestGetExchangeRate(t *testing.T) {
 		if want, got := tt.ExpectedErr, err; !reflect.DeepEqual(want, got) {
 			t.Fatalf("#%d failed: expected error=%v, got %v", i, want, got)
 		}
-		if want, got := tt.ExpectedRate, got; int(want) != int(got) { // matching integer parts only becuase rates change frequently
+		if want, got := tt.ExpectedRate, got; int(want) != int(got) { // matching integer parts only because rates change frequently
 			t.Fatalf("#%d failed: expected rate=%v, got %v", i, want, got)
 		}
 	}
