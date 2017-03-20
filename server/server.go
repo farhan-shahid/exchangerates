@@ -24,6 +24,10 @@ var (
 	moc                      = mock.New()
 )
 
+type Server struct {
+	r *mux.Router
+}
+
 // GetRouter returns a *mux.Router with the necessary handler(s) attached
 func GetRouter() *mux.Router {
 	r := mux.NewRouter()

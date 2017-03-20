@@ -14,9 +14,14 @@ func main() {
 	flag.Parse()
 
 	r := server.GetRouter()
-	http.Handle("/", r)
+
+	//http.Handle("/", r)
+	//log.Fatal(http.ListenAndServe(*addr, nil))
+	srv := &http.Server{
+		Addr:    *addr,
+		Handler: r,
+	}
 
 	fmt.Println("serving on " + *addr)
-	log.Fatal(http.ListenAndServe(*addr, nil))
-
+	log.Fatal(srv.ListenAndServe())
 }
