@@ -75,6 +75,7 @@ func handleStoreReq(w http.ResponseWriter, req *http.Request) {
 		store = moc
 	} else {
 		http.Error(w, vars["store"]+" is not a valid store", http.StatusBadRequest)
+		return
 	}
 
 	from, to, date, success := getFormValues(w, req)
