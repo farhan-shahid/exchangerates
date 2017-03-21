@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 	"regexp"
@@ -24,20 +25,40 @@ var (
 	moc                      = mock.New()
 )
 
+type loggingHandler struct {
+	w io.Writer
+	h http.Handler
+}
+
+func (l *loggingHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	l.w.Write([]byte(r.URL.String()))
+	l.h.ServeHTTP(rw, r)
+}
+
+// LoggingHandler returns a http.Handler that logs requests before calling given handler's ServeHTTP method
+func LoggingHandler(w io.Writer, h http.Handler) http.Handler {
+	return &loggingHandler{w: w, h: h}
+}
+
 // Server type manages routes for accessing exchange rates over http
 type Server struct {
-	router *mux.Router
+	h http.Handler
 }
 
 // New returns a *Server with the necessary routing handler(s) attached
 func New() *Server {
 	r := mux.NewRouter()
 	r.HandleFunc("/{store}", handleStoreReq)
-	return &Server{router: r}
+	return &Server{h: r}
+}
+
+// AddLogging adds request logging using LoggingHandler
+func (s *Server) AddLogging(w io.Writer) {
+	s.h = LoggingHandler(w, s.h)
 }
 
 func (s *Server) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	s.router.ServeHTTP(rw, r)
+	s.h.ServeHTTP(rw, r)
 }
 
 func handleStoreReq(w http.ResponseWriter, req *http.Request) {

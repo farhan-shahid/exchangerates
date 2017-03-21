@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/farhan-shahid/exchangerates/server"
 )
@@ -13,6 +14,7 @@ func main() {
 	flag.Parse()
 
 	s := server.New()
+	s.AddLogging(os.Stdout)
 	srv := &http.Server{
 		Addr:    *addr,
 		Handler: s,
