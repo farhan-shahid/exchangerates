@@ -12,5 +12,3 @@ debug.test
 *.out
 
 .glide/
-
-vendor/
