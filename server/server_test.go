@@ -43,7 +43,7 @@ func TestHandleStoreReq(t *testing.T) {
 		},
 	}
 
-	r := GetRouter()
+	s := New()
 
 	moc.OnGetExchangeRate = func(from, to string, date string) (float64, error) {
 		return 1.0, nil
@@ -56,7 +56,7 @@ func TestHandleStoreReq(t *testing.T) {
 		}
 
 		rr := httptest.NewRecorder()
-		r.ServeHTTP(rr, req)
+		s.ServeHTTP(rr, req)
 
 		if rr.Code != tt.ExpectedCode {
 			t.Errorf("#%d failed: expected code=%v, got %v", i, tt.ExpectedCode, rr.Code)

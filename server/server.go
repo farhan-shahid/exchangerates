@@ -24,15 +24,20 @@ var (
 	moc                      = mock.New()
 )
 
+// Server type manages routes for accessing exchange rates over http
 type Server struct {
-	r *mux.Router
+	router *mux.Router
 }
 
-// GetRouter returns a *mux.Router with the necessary handler(s) attached
-func GetRouter() *mux.Router {
+// New returns a *Server with the necessary routing handler(s) attached
+func New() *Server {
 	r := mux.NewRouter()
 	r.HandleFunc("/{store}", handleStoreReq)
-	return r
+	return &Server{router: r}
+}
+
+func (s *Server) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	s.router.ServeHTTP(rw, r)
 }
 
 func handleStoreReq(w http.ResponseWriter, req *http.Request) {

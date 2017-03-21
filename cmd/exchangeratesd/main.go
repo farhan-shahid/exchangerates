@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -13,15 +12,11 @@ func main() {
 	addr := flag.String("addr", "localhost:7777", "the address of the server")
 	flag.Parse()
 
-	r := server.GetRouter()
-
-	//http.Handle("/", r)
-	//log.Fatal(http.ListenAndServe(*addr, nil))
+	s := server.New()
 	srv := &http.Server{
 		Addr:    *addr,
-		Handler: r,
+		Handler: s,
 	}
-
-	fmt.Println("serving on " + *addr)
+	log.Printf("Serving on %s", srv.Addr)
 	log.Fatal(srv.ListenAndServe())
 }
