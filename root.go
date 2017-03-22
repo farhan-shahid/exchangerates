@@ -10,17 +10,17 @@ import (
 // Store is the interface that all exchange rate stores must satisfy
 type Store interface {
 	GetExchangeRate(from, to string, date string) (float64, error)
-	GetMonthExchangeRates(from, to string, year, month int) ([]DateExchangeRatePair, error)
+	GetMonthExchangeRates(from, to string, year, month int) ([]DateRate, error)
 }
 
-// DateExchangeRatePair represents a single exchange rate with its date
-type DateExchangeRatePair struct {
+// DateRate represents a single exchange rate with its date
+type DateRate struct {
 	Date time.Time
 	Rate float64
 }
 
 // MakeRateChart writes a graphical representation of the exchange rate data to io.Writer provided
-func MakeRateChart(from, to string, rates []DateExchangeRatePair, w io.Writer) error {
+func MakeRateChart(from, to string, rates []DateRate, w io.Writer) error {
 	dates := make([]time.Time, len(rates))
 	vals := make([]float64, len(rates))
 	for i := range rates {

@@ -9,7 +9,7 @@ import (
 // Store allows mocking of exchange rate stores for testing
 type Store struct {
 	OnGetExchangeRate       func(from, to string, date string) (float64, error)
-	OnGetMonthExchangeRates func(from, to string, year, month int) ([]exchangerates.DateExchangeRatePair, error)
+	OnGetMonthExchangeRates func(from, to string, year, month int) ([]exchangerates.DateRate, error)
 }
 
 // New returns a new instance of Store
@@ -26,7 +26,7 @@ func (s *Store) GetExchangeRate(from, to string, date string) (float64, error) {
 }
 
 // GetMonthExchangeRates just calls the OnGetMonthExchangeRates function that is specified by the calling context
-func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]exchangerates.DateExchangeRatePair, error) {
+func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]exchangerates.DateRate, error) {
 	if s.OnGetMonthExchangeRates == nil {
 		return nil, errors.New("OnGetMonthExchangeRates not set")
 	}

@@ -53,7 +53,7 @@ func (s *Store) GetExchangeRate(from, to string, date string) (float64, error) {
 }
 
 // GetMonthExchangeRates is not supported currently
-func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]exchangerates.DateExchangeRatePair, error) {
+func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]exchangerates.DateRate, error) {
 	return nil, errors.New("Not supported currently")
 
 }

@@ -49,8 +49,8 @@ func (s *Store) GetExchangeRate(from, to string, date string) (float64, error) {
 }
 
 // GetMonthExchangeRates returns a list of exchange rate values for the month specified
-func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]exchangerates.DateExchangeRatePair, error) {
-	rates := make([]exchangerates.DateExchangeRatePair, 0, 31)
+func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]exchangerates.DateRate, error) {
+	rates := make([]exchangerates.DateRate, 0, 31)
 	for i := 1; i <= 31; i++ {
 		date := strconv.Itoa(year) + "-" + fmt.Sprintf("%02d", month) + "-" + fmt.Sprintf("%02d", i)
 
@@ -65,7 +65,7 @@ func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]excha
 
 		rate := calcRate(fromVal, toVal)
 		t, _ := time.Parse("2006-01-02", date)
-		rates = append(rates, exchangerates.DateExchangeRatePair{Rate: rate, Date: t})
+		rates = append(rates, exchangerates.DateRate{Rate: rate, Date: t})
 	}
 	if len(rates) == 0 {
 		return nil, errors.New("No data exists")
