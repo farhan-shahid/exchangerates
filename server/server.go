@@ -2,10 +2,12 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/farhan-shahid/exchangerates"
@@ -57,8 +59,8 @@ func (s *Server) AddLogging(w io.Writer) {
 	s.h = LoggingHandler(w, s.h)
 }
 
-func (s *Server) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	s.h.ServeHTTP(rw, r)
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.h.ServeHTTP(w, r)
 }
 
 func handleStoreReq(w http.ResponseWriter, req *http.Request) {
@@ -78,35 +80,45 @@ func handleStoreReq(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	from, to, date, success := getFormValues(w, req)
-	if !success {
-		return
-	}
-
-	rate, err := store.GetExchangeRate(from, to, date)
+	from, to, date, chart, month, year, err := getFormValues(w, req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(&rateResp{Rate: rate})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	if !chart {
+		rate, err := store.GetExchangeRate(from, to, date)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		err = json.NewEncoder(w).Encode(&rateResp{Rate: rate})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		rates, err := store.GetMonthExchangeRates(from, to, year, month)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		exchangerates.MakeRateChart(from, to, rates, w)
 	}
 }
 
-func getFormValues(w http.ResponseWriter, req *http.Request) (from, to, date string, success bool) {
+func getFormValues(w http.ResponseWriter, req *http.Request) (from, to, date string, chart bool, month, year int, err error) {
 	from = req.FormValue("from")
 	if from == "" {
-		http.Error(w, `missing "from" URL parameter`, http.StatusBadRequest)
-		return "", "", "", false
+		err = errors.New(`missing "from" URL parameter`)
+		return
 	}
 
 	to = req.FormValue("to")
 	if to == "" {
-		http.Error(w, `missing "to" URL parameter`, http.StatusBadRequest)
-		return "", "", "", false
+		err = errors.New(`missing "to" URL parameter`)
+		return
 	}
 
 	date = time.Now().AddDate(0, 0, -1).UTC().Format("2006-01-02") // default date is yesterday's date
@@ -114,10 +126,32 @@ func getFormValues(w http.ResponseWriter, req *http.Request) (from, to, date str
 		if match, _ := regexp.MatchString("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", req.FormValue("date")); match {
 			date = req.FormValue("date")
 		} else {
-			http.Error(w, `incorrect date format, should be similar to 2016-03-28`, http.StatusBadRequest)
-			return "", "", "", false
+			err = errors.New(`incorrect date format, should be similar to 2016-03-28`)
+			return
 		}
 	}
-	success = true
+
+	if req.FormValue("chart") != "" {
+		chart = true
+	}
+
+	if req.FormValue("month") != "" {
+		month, err = strconv.Atoi(req.FormValue("month"))
+		if err != nil {
+			return
+		}
+	}
+
+	if req.FormValue("year") != "" {
+		year, err = strconv.Atoi(req.FormValue("year"))
+		if err != nil {
+			return
+		}
+	}
+
+	if chart && (month == 0 || year == 0) {
+		err = errors.New(`month and year are required for chart`)
+		return
+	}
 	return
 }

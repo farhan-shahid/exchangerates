@@ -1,10 +1,28 @@
-hash: b8c343dd0db60fe4768874b548c91aae548eb22c2a13da32269cd05657be65de
-updated: 2017-03-20T22:43:14.096883639+01:00
+hash: 25cd628f99283cfceb2105d745ae9afa15144ca4efb68e1d64a239e916881c92
+updated: 2017-03-22T04:14:58.072304613+01:00
 imports:
+- name: github.com/blendlabs/go-exception
+  version: 743c4bf7eb9a27daace783577299612a7345bf09
+- name: github.com/golang/freetype
+  version: d9be45aaf7452cc30c0ceb1b1bf7efe1d17b7c87
+  subpackages:
+  - raster
+  - truetype
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
   version: 392c28fe23e1c45ddba891b0320b3b5df220beea
+- name: github.com/wcharczuk/go-chart
+  version: fc2973067ce43455507ea5f9aa9814aabbf8f2ca
+  subpackages:
+  - drawing
+- name: golang.org/x/image
+  version: fb59e5ba1052c469714bd4e918e7d8360aaa9642
+  subpackages:
+  - draw
+  - font
+  - math/f64
+  - math/fixed
 - name: golang.org/x/net
   version: a6577fac2d73be281a500b310739095313165611
   subpackages:
