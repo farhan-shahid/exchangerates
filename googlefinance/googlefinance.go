@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/farhan-shahid/exchangerates"
+
 	"golang.org/x/net/html"
 )
 
@@ -48,6 +50,12 @@ func (s *Store) GetExchangeRate(from, to string, date string) (float64, error) {
 	}
 
 	return rate, nil
+}
+
+// GetMonthExchangeRates is not supported currently
+func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]exchangerates.DateExchangeRatePair, error) {
+	return nil, errors.New("Not supported currently")
+
 }
 
 func getNodeByAttr(n *html.Node, attrName, val string) (*html.Node, bool) {
