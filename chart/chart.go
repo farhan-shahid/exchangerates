@@ -28,7 +28,7 @@ func MakeRateChartGIF(from, to string, rates []exchangerates.DateRate, w io.Writ
 		}
 		b.Reset()
 
-		err = gif.Encode(&b, pngImg, &gif.Options{NumColors: 256})
+		err = gif.Encode(&b, pngImg, &gif.Options{NumColors: 64})
 		if err != nil {
 			return err
 		}
@@ -74,8 +74,8 @@ func makeRateChartPartial(from, to string, rates []exchangerates.DateRate, w io.
 			gochart.TimeSeries{
 				Style: gochart.Style{
 					Show:        true,
-					StrokeColor: gochart.GetDefaultColor(0).WithAlpha(64),
-					FillColor:   gochart.GetDefaultColor(0).WithAlpha(64),
+					StrokeColor: gochart.ColorBlack.WithAlpha(128),
+					//FillColor:   gochart.GetDefaultColor(0).WithAlpha(128),
 				},
 				XValues: dates,
 				YValues: vals,
