@@ -12,6 +12,3 @@ debug.test
 *.out
 
 .glide/
-
-/exchangerates
-/exchangeratesd
