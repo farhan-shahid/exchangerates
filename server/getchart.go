@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/farhan-shahid/exchangerates"
+	"github.com/farhan-shahid/exchangerates/chart"
 )
 
 func getChartHandler(w http.ResponseWriter, req *http.Request) {
@@ -23,7 +23,7 @@ func getChartHandler(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	exchangerates.MakeRateChart(from, to, rates, w)
+	chart.MakeRateChartGIF(from, to, rates, w)
 }
 
 func getChartFormValues(w http.ResponseWriter, req *http.Request) (from, to string, month, year int, err error) {

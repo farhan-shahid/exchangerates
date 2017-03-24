@@ -1,6 +1,6 @@
 debug
 debug.test
-.vscode/*
+.vscode/
 
 *.exe
 *.dll

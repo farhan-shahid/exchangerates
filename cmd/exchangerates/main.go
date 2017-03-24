@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/farhan-shahid/exchangerates"
+	"github.com/farhan-shahid/exchangerates/chart"
 	"github.com/farhan-shahid/exchangerates/ecb"
 	"github.com/farhan-shahid/exchangerates/googlefinance"
 	"github.com/farhan-shahid/exchangerates/mock"
@@ -25,7 +26,7 @@ func main() {
 		from      = flag.String("from", "EUR", "the currency to convert from")
 		to        = flag.String("to", "USD", "the currency to convert to")
 		date      = flag.String("date", "2017-03-02", "the date for which to get exchange rate")
-		chart     = flag.Bool("getchart", false, "set to true to get exchange rate chart")
+		getchart  = flag.Bool("getchart", false, "set to true to get exchange rate chart")
 		month     = flag.Int("month", 1, "the month for which to get exchange rate chart")
 		year      = flag.Int("year", 2017, "the year for which to get exchange rate chart")
 	)
@@ -40,7 +41,7 @@ func main() {
 		log.Fatal("Invalid store")
 	}
 
-	if !*chart {
+	if !*getchart {
 		val, err := s.GetExchangeRate(*from, *to, *date)
 		if err != nil {
 			log.Fatal(err)
@@ -57,7 +58,7 @@ func main() {
 			log.Fatal(err)
 		}
 		defer file.Close()
-		err = exchangerates.MakeRateChart(*from, *to, rates, file)
+		err = chart.MakeRateChart(*from, *to, rates, file)
 		if err != nil {
 			log.Fatal(err)
 		}

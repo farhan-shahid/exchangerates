@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestHandleStoreReq(t *testing.T) {
+func TestGetRateHandler(t *testing.T) {
 	var tests = []struct {
 		params        url.Values
 		ExpectedCode  int
