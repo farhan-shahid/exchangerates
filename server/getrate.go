@@ -21,6 +21,8 @@ func getRateHandler(w http.ResponseWriter, req *http.Request) {
 		store = ec
 	} else if vars["store"] == "googlefinance" {
 		store = goog
+	} else if vars["store"] == "ecbsql" {
+		store = ecsql
 	} else if vars["store"] == "mock" {
 		store = moc
 	} else {

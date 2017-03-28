@@ -75,7 +75,6 @@ func makeRateChartPartial(from, to string, rates []exchangerates.DateRate, w io.
 				Style: gochart.Style{
 					Show:        true,
 					StrokeColor: gochart.ColorBlack.WithAlpha(128),
-					//FillColor:   gochart.GetDefaultColor(0).WithAlpha(128),
 				},
 				XValues: dates,
 				YValues: vals,

@@ -6,6 +6,7 @@ import (
 
 	"github.com/farhan-shahid/exchangerates"
 	"github.com/farhan-shahid/exchangerates/ecb"
+	"github.com/farhan-shahid/exchangerates/ecbsql"
 	"github.com/farhan-shahid/exchangerates/googlefinance"
 	"github.com/farhan-shahid/exchangerates/mock"
 	"github.com/gorilla/mux"
@@ -16,9 +17,10 @@ type rateResp struct {
 }
 
 var (
-	ec   exchangerates.Store = ecb.New()
-	goog exchangerates.Store = googlefinance.New()
-	moc                      = mock.New()
+	ec    exchangerates.Store = ecb.New()
+	ecsql exchangerates.Store = ecbsql.New()
+	goog  exchangerates.Store = googlefinance.New()
+	moc                       = mock.New()
 )
 
 type loggingHandler struct {
