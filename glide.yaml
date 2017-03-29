@@ -7,3 +7,6 @@ import:
 - package: golang.org/x/net
   subpackages:
   - html
+- package: github.com/jmoiron/sqlx
+- package: github.com/go-sql-driver/mysql
+  version: v1.3
