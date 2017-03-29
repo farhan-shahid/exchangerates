@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/farhan-shahid/exchangerates"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" //register driver
 	"github.com/jmoiron/sqlx"
 )
 
@@ -26,7 +26,7 @@ const db = "ExchangeDB"
 const dbuser = "root"
 const passEnv = "MYSQLPASS"
 
-// Store fetches and stores historical currency exchange data from ecb.europa.eu
+// Store fetches and stores historical currency exchange data from ecb.europa.eu into a MySQL database
 type Store struct {
 	db *sqlx.DB
 }
@@ -82,7 +82,7 @@ func (s *Store) GetMonthExchangeRates(from, to string, year, month int) ([]excha
 }
 
 func (s *Store) fetchData() (err error) {
-	connStr := fmt.Sprintf("%s:%s@/%s", dbuser, os.Getenv("MYSQLPASS"), db)
+	connStr := fmt.Sprintf("%s:%s@/%s", dbuser, os.Getenv(passEnv), db)
 	s.db, err = sqlx.Connect("mysql", connStr)
 	if err != nil {
 		return err
@@ -134,7 +134,6 @@ func (s *Store) fetchData() (err error) {
 	tx := s.db.MustBegin()
 	for _, i := range d.Rates {
 		for _, j := range i.Curr {
-
 			tx.Exec(`INSERT INTO ExchangeRate (fromCurr, toCurr, date, rate) VALUES (?, ?, ?, ?)`, "EUR", j.Currency, i.Date, j.Rate)
 		}
 		tx.Exec(`INSERT INTO ExchangeRate (fromCurr, toCurr, date, rate) VALUES (?, ?, ?, ?)`, "EUR", "EUR", i.Date, 1)
